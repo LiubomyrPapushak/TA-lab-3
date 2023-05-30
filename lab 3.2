@@ -1,0 +1,45 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdlib.h>
+#include <locale.h>
+#include <stdio.h>
+
+int countMultiplesOf10(int numbers[], int n, int product, int index) {
+    if (index >= n) {
+        if (product % 10 == 0) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    else {
+        int withNumber = countMultiplesOf10(numbers, n, product * numbers[index], index + 1);
+        int withoutNumber = countMultiplesOf10(numbers, n, product, index + 1);
+        return withNumber + withoutNumber;
+    }
+}
+
+int main() {
+    system("chcp 1251");
+    setlocale(LC_CTYPE, "ukr");
+    system("cls");
+    int numbers[] = { 2, 3, 5, 7, 11, 13 };
+    int n = sizeof(numbers) / sizeof(numbers[0]);
+
+    int result = countMultiplesOf10(numbers, n, 1, 0);
+
+    printf("Кількість різних добутків, кратних 10: %d\n", result);
+
+    printf("Введіть клькість чисел для обчислення:");
+    int size;
+    scanf("%d", &size);
+    int* list = new int[size];
+    for (int i = 0; i < size; i++) {
+        printf("a[%d] =", i + 1);
+        scanf("%d", &list[i]);
+    }
+    result = countMultiplesOf10(list, size, 1, 0);
+    printf("\nКількість різних добутків, кратних 10 введених вами числами: %d\n", result);
+    delete[] list;
+    return 0;
+}
