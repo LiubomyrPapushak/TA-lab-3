@@ -1,0 +1,34 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdlib.h>
+#include <locale.h>
+#include <stdio.h>
+
+int arithmeticSum(int firstTerm, int difference, int n) {
+    if (n == 1) {
+        return firstTerm;
+    }
+    else {
+        return firstTerm + arithmeticSum(firstTerm + difference, difference, n - 1);
+    }
+}
+
+int main() {
+    system("chcp 1251");
+    setlocale(LC_CTYPE, "ukr");
+    system("cls");
+    int firstTerm, difference, n;
+
+    printf("Введіть перший член арифметичної прогресії: ");
+    scanf("%d", &firstTerm);
+
+    printf("Введіть різницю арифметичної прогресії: ");
+    scanf("%d", &difference);
+
+    printf("Введіть кількість членів, суму яких потрібно обчислити: ");
+    scanf("%d", &n);
+
+    int sum = arithmeticSum(firstTerm, difference, n);
+    printf("Сума перших %d членів арифметичної прогресії: %d\n", n, sum);
+
+    return 0;
+}
