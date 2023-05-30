@@ -1,0 +1,70 @@
+ВИКОНАННЯ:
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <string.h>
+
+struct WeatherData
+{
+    int day;
+    int month;
+    float temperature;
+    float pressure;
+};
+
+int main()
+{
+    system("chcp 1251");
+    setlocale(LC_CTYPE, "ukr");
+    system("cls");
+    int numDays;
+    float averagePressure = 0.0;
+    int count = 0;
+
+    printf("Введіть кількість днів які треба ввести: ");
+    scanf("%d", &numDays);
+
+    struct WeatherData* data = (struct WeatherData*)malloc(numDays * sizeof(struct WeatherData));
+
+    for (int i = 0; i < numDays; i++)
+    {
+        printf("\nДень %d:\n", i + 1);
+        printf("Введіть дату (день місяць): ");
+        scanf("%d %d", &(data[i].day), &(data[i].month));
+        printf("Введіть температуру: ");
+        scanf("%f", &(data[i].temperature));
+        printf("Введіть тиск: ");
+        scanf("%f", &(data[i].pressure));
+
+        averagePressure += data[i].pressure;
+    }
+
+    averagePressure /= numDays;
+
+    printf("\nПогодні дані:\n");
+    printf(" _________________________________________\n");
+    printf("|  Дата  | Температура |  Атмосферний тиск|\n");
+    printf("|________|_____________|__________________|\n");
+
+    for (int i = 0; i < numDays; i++)
+    {
+        printf("| %02d/%02d  |  %-7.1f    |  %-7.1f        |\n", data[i].day, data[i].month, data[i].temperature, data[i].pressure);
+        printf("|________|_____________|_________________|\n");
+    }
+    printf("\nДні з атмосферним тиском вище середнього: %d\n\n", count);
+    printf("\nПогодні дані:\n");
+    printf(" _________________________________________\n");
+    printf("|  Дата  | Температура |  Атмосферний тиск|\n");
+    printf("|________|_____________|__________________|\n");
+
+    for (int i = 0; i < numDays; i++)
+    {
+        if (data[i].pressure > averagePressure) {
+            printf("| %02d/%02d  |  %-7.1f    |  %-7.1f         |\n", data[i].day, data[i].month, data[i].temperature, data[i].pressure);
+            printf("|________|_____________|__________________|\n");
+        }
+    }
+    free(data);
+    return 0;
+}
