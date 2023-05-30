@@ -1,0 +1,149 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <string.h>
+
+#define MAX_NAME_LENGTH 20
+#define NUM_SUBJECTS 5
+
+struct Student
+{
+	char Sur_name[MAX_NAME_LENGTH];
+	int Grades[NUM_SUBJECTS];
+};
+void sortStudents(struct Student* students, int numStudents)
+{
+    for (int i = 0; i < numStudents - 1; i++)
+    {
+        for (int j = 0; j < numStudents - i - 1; j++)
+        {
+            if (strcmp(students[j].Sur_name, students[j + 1].Sur_name) > 0)
+            {
+                struct Student temp = students[j];
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+void calculateAverageGrades(struct Student* students, int numStudents, float* averages)
+{
+    for (int i = 0; i < NUM_SUBJECTS; i++)
+    {
+        float sum = 0.0;
+        for (int j = 0; j < numStudents; j++)
+        {
+            sum += students[j].Grades[i];
+        }
+        averages[i] = sum / numStudents;
+    }
+}
+int main()
+{
+    system("chcp 1251");
+    setlocale(LC_CTYPE, "ukr");
+    system("cls");
+    int numStudents;
+
+    printf("Введіть кількість студентів: ");
+    scanf("%d", &numStudents);
+
+    char subject[5][11] = {{"Математика"} ,{"Укр. мова"} ,{"Англ. мова"} ,{"Історія"} ,{"Фізика"}};
+    struct Student* students = (struct Student*)malloc(numStudents * sizeof(struct Student));
+    float* averageGrades = (float*)malloc(NUM_SUBJECTS * sizeof(float));
+
+    for (int i = 0; i < numStudents; i++)
+    {
+        printf("\nСтудент %d:\n", i + 1);
+        printf("Введіть ім'я: ");
+        scanf("%s", students[i].Sur_name);
+        printf("Введіть бали для %d предметів:\n", NUM_SUBJECTS);
+        for (int j = 0; j < NUM_SUBJECTS; j++)
+        {
+            printf("%s: ", subject[j]);
+            scanf("%d", &(students[i].Grades[j]));
+        }
+    }
+    FILE* file;
+    file = fopen("Grades.txt", "w");
+    if (file == NULL) {
+        printf("Помилка відкриття файлу.");
+        return 1;
+    }
+
+    for (int i = 0; i < numStudents; i++) {
+        fprintf(file, "%s\n", students[i].Sur_name);
+        for (int j = 0; j < NUM_SUBJECTS; j++) {
+            fprintf(file, "%d\n", students[i].Grades[j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+    free(students);
+    free(averageGrades);
+    file = fopen("Grades.txt", "r");
+    if (file == NULL) {
+        printf("Помилка відкриття файлу.");
+        return 1;
+    }
+
+    for (int i = 0; i < numStudents; i++) {
+        fscanf(file, "%s", students[i].Sur_name);
+        for (int j = 0; j < NUM_SUBJECTS; j++) {
+            fscanf(file, "%d", &(students[i].Grades[j]));
+        }
+    }
+
+    fclose(file);
+    sortStudents(students, numStudents);
+    calculateAverageGrades(students, numStudents, averageGrades);
+
+    printf("\nВідсортований список балів студентів:\n");
+    printf(" ______________________________________________________________________________\n");
+    printf("|   Фамілія   | Математика | Укр. мова  | Англ. мова | Історія    |   Фізика   |\n");
+    printf("|_____________|____________|____________|____________|____________|____________|\n");
+    for (int i = 0; i < numStudents; i++)
+    {
+        printf("| %-12s", students[i].Sur_name);
+        for (int j = 0; j < NUM_SUBJECTS; j++)
+        {
+            printf("|    %2d      ", students[i].Grades[j]);
+           
+        }
+        printf("|\n");
+        printf("|_____________|____________|____________|____________|____________|____________|\n");
+    }
+    printf("|_____________|____________|____________|____________|____________|____________|\n");
+
+    printf("| %-12s", "Середній бал");
+    for (int i = 0; i < NUM_SUBJECTS; i++)
+    {
+        printf("|    %.1f    ", averageGrades[i]);
+    }
+    printf("|\n");
+    printf("|_____________|____________|____________|____________|____________|____________|\n");
+
+    file = fopen("Result.txt", "w");
+    if (file == NULL)
+    {
+        printf("Помилка відкриття файлу.");
+        return 1;
+    }
+
+    for (int i = 0; i < numStudents; i++)
+    {
+        fprintf(file, "Студент %d:\n", i + 1);
+        fprintf(file, "Ім'я: %s\n", students[i].Sur_name);
+        fprintf(file, "Бали за предмети:\n");
+        for (int j = 0; j < NUM_SUBJECTS; j++)
+        {
+            fprintf(file, "%s: %d\n", subject[j], students[i].Grades[j]);
+        }
+        fprintf(file, "\n");
+}
+fprintf(file, "Середній бал:\n Математика = %0.1f, Укр. мова = %0.1f, Англ. мова = %0.1f, Історія = %0.1f, Фізика = %0.1f\n", averageGrades[0], averageGrades[1], averageGrades[2], averageGrades[3], averageGrades[4]);
+fclose(file);
+return 0;
+}
