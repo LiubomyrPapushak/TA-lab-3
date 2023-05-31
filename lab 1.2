@@ -1,0 +1,73 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <locale.h>
+
+int main()
+{
+    system("chcp 1251");
+    setlocale(LC_CTYPE, "ukr");
+    system("cls");
+
+    FILE* file;
+    file = fopen("number.txt", "w");
+    if (file == NULL) {
+        printf("Не вдається відкрити файл\n");
+        return 1;
+    }
+    int n;
+    printf("Введіть розмір массиву чисел:");
+    scanf("%d", &n);
+    int masiv['n'];
+    printf("Введіть елемент:\n");
+    for (int i = 0; i < n; i++) {
+        printf("a[%d]=", i);
+        scanf("%d", &masiv[i]);
+    }
+    printf("Масив чисел записано у файл number.txt\n");
+
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%d ", masiv[i]);
+    }
+    fclose(file);
+
+    file = fopen("number.txt", "w");
+    if (file == NULL) {
+        printf("Не вдається відкрити файл\n");
+        return 1;
+    }
+    fprintf(file, "%d\n", n);
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%d ", masiv[i]);
+    }
+    fclose(file);
+
+
+    file = fopen("number.txt", "r");
+    if (file == NULL) {
+        printf("Не вдається відкрити файл\n");
+        return 1;
+    }
+    int size;
+    fscanf(file, "%d", &size);
+    int* array = (int*)malloc(size * sizeof(int));
+    for (int i = 0; i < size; i++) {
+        fscanf(file, "%d", &array[i]);
+    }
+    fclose(file);
+
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += array[i];
+    }
+    printf("Сума елементів з файлу: %d\n", sum);
+
+    int minus = 0;
+    for (int i = 0; i < size; i++) {
+        if (array[i] < 0) {
+            minus++;
+        }
+    }
+    printf("Кількість від'ємних елементів: %d\n", minus);
+}
