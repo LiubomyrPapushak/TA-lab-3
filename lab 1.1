@@ -1,0 +1,47 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+#include <locale.h>
+#include <stdlib.h>
+
+int main() {
+    system("chcp 1251");
+    setlocale(LC_CTYPE, "ukr");
+    system("cls");
+    FILE* inp, * out;
+    inp = fopen("input.txt", "w+");
+    if (inp == NULL) {
+        printf("Не вдається відкрити файл\n");
+        return 1;
+    }
+    char s[40];
+    printf("Введіть рядок: ");
+    fgets(s, sizeof(s), stdin);
+
+    size_t len = strlen(s);
+    if (len > 0 && s[len - 1] == '\n') {
+        s[len - 1] = '\0';
+    }
+
+    fputs(s, inp);
+    fputs("\n", inp);
+
+    fclose(inp);
+
+    inp = fopen("input.txt", "r");
+    fgets(s, sizeof(s), inp);
+    char* found = strchr(s, '!');
+
+    if (found != NULL) {
+        int index = found - s;
+        memmove(s, s + index + 1, strlen(s) - index);
+
+        out = fopen("output.txt", "w");
+        fputs(s, out);
+        fputs("\n", out);
+        printf("Результат: %s\n", s);
+    }
+    printf("Рядок записано у файл output.txt\n");
+
+    return 0;
+}
